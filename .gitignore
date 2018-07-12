@@ -11,3 +11,6 @@ graphdb-benchmarks.iml
 metrics/
 results/
 storage/
+
+*.iml
+idea/

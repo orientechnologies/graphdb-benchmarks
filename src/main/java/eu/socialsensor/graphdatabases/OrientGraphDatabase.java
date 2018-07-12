@@ -26,6 +26,7 @@ import eu.socialsensor.insert.OrientSingleInsertion;
 import eu.socialsensor.main.BenchmarkConfiguration;
 import eu.socialsensor.main.GraphDatabaseType;
 import eu.socialsensor.utils.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,28 +48,29 @@ public class OrientGraphDatabase extends GraphDatabaseBase<Iterator<Vertex>, Ite
 
     private OrientGraph graph = null;
     private boolean useLightWeightEdges;
+    private String connectUrl;
 
     //
     public OrientGraphDatabase(BenchmarkConfiguration config, File dbStorageDirectoryIn)
     {
         super(GraphDatabaseType.ORIENT_DB, dbStorageDirectoryIn);
         OGlobalConfiguration.STORAGE_COMPRESSION_METHOD.setValue("nothing");
-        this.useLightWeightEdges = config.orientLightweightEdges() == null ? true : config.orientLightweightEdges()
-            .booleanValue();
+        this.useLightWeightEdges = config.orientLightweightEdges();
+        this.connectUrl = config.orientRemoteDbUrl();
     }
 
     @Override
     public void open()
     {
-        graph = getGraph(dbStorageDirectory);
+        graph = getGraph();
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void createGraphForSingleLoad()
     {
-        OGlobalConfiguration.STORAGE_KEEP_OPEN.setValue(false);
-        graph = getGraph(dbStorageDirectory);
+       // OGlobalConfiguration.STORAGE_KEEP_OPEN.setValue(false);
+        graph = getGraph();
         createSchema();
     }
 
@@ -76,8 +78,9 @@ public class OrientGraphDatabase extends GraphDatabaseBase<Iterator<Vertex>, Ite
     @Override
     public void createGraphForMassiveLoad()
     {
-        OGlobalConfiguration.STORAGE_KEEP_OPEN.setValue(false);
-        graph = getGraph(dbStorageDirectory);
+        //OGlobalConfiguration.STORAGE_KEEP_OPEN.setValue(false);
+        // No longer exists in Orient 3.0.3
+        graph = getGraph();
         createSchema();
     }
 
@@ -109,10 +112,15 @@ public class OrientGraphDatabase extends GraphDatabaseBase<Iterator<Vertex>, Ite
     @Override
     public void delete()
     {
-        OrientGraphNoTx g = new OrientGraphNoTx("plocal:" + dbStorageDirectory.getAbsolutePath());
-        g.drop();
+        if (StringUtils.isNotEmpty(this.connectUrl)){
+            graph.drop();
+        } else {
+            OrientGraphNoTx g = new OrientGraphNoTx("plocal:" + dbStorageDirectory.getAbsolutePath());
+            graph.drop();
+            g.drop();
 
-        Utils.deleteRecursively(dbStorageDirectory);
+            Utils.deleteRecursively(dbStorageDirectory);
+        }
     }
 
     @Override
@@ -407,6 +415,14 @@ public class OrientGraphDatabase extends GraphDatabaseBase<Iterator<Vertex>, Ite
         g = graphFactory.getTx();
         g.setUseLightweightEdges(this.useLightWeightEdges);
         return g;
+    }
+
+    private OrientGraph getGraph(final String url){
+        return new OrientGraph(url, "root", "admin");
+    }
+
+    private OrientGraph getGraph(){
+        return StringUtils.isNotEmpty(connectUrl) ? getGraph(connectUrl) : getGraph(dbStorageDirectory);
     }
 
     @Override

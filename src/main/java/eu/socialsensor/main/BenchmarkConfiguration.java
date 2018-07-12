@@ -88,6 +88,7 @@ public class BenchmarkConfiguration
     private final BackendDataModel dynamodbDataModel;
     private final boolean dynamodbConsistentRead;
     private final Boolean orientLightweightEdges;
+    private final String orientRemoteDbUrl;
     private final String sparkseeLicenseKey;
 
     // shortest path
@@ -166,6 +167,7 @@ public class BenchmarkConfiguration
 
         Configuration orient = socialsensor.subset("orient");
         orientLightweightEdges = orient.containsKey(LIGHTWEIGHT_EDGES) ? orient.getBoolean(LIGHTWEIGHT_EDGES) : null;
+        orientRemoteDbUrl = orient.containsKey("connection-url") ? orient.getString("connection-url") : null;
 
         Configuration sparksee = socialsensor.subset("sparksee");
         sparkseeLicenseKey = sparksee.containsKey(LICENSE_KEY) ? sparksee.getString(LICENSE_KEY) : null;
@@ -363,6 +365,10 @@ public class BenchmarkConfiguration
     public Boolean orientLightweightEdges()
     {
         return orientLightweightEdges;
+    }
+
+    public String orientRemoteDbUrl() {
+        return orientRemoteDbUrl;
     }
 
     public String getSparkseeLicenseKey()
