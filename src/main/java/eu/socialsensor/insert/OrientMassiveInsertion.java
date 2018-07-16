@@ -32,7 +32,7 @@ public class OrientMassiveInsertion extends InsertionBase<Long> implements Inser
         }
         transactionlessGraph.shutdown();
 
-        graph = new OGraphBatchInsertBasic(url);
+        graph = new OGraphBatchInsertBasic(url, "root", "admin");
         graph.setAverageEdgeNumberPerNode(AVERAGE_NUMBER_OF_EDGES_PER_NODE);
         graph.setEstimatedEntries(ESTIMATED_ENTRIES);
         graph.setIdPropertyName("nodeId");

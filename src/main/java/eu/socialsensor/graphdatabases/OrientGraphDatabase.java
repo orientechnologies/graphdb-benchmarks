@@ -49,14 +49,18 @@ public class OrientGraphDatabase extends GraphDatabaseBase<Iterator<Vertex>, Ite
     private OrientGraph graph = null;
     private boolean useLightWeightEdges;
     private String connectUrl;
+    private String username;
+    private String password;
 
     //
     public OrientGraphDatabase(BenchmarkConfiguration config, File dbStorageDirectoryIn)
     {
         super(GraphDatabaseType.ORIENT_DB, dbStorageDirectoryIn);
         OGlobalConfiguration.STORAGE_COMPRESSION_METHOD.setValue("nothing");
-        this.useLightWeightEdges = config.orientLightweightEdges();
-        this.connectUrl = config.orientRemoteDbUrl();
+        this.useLightWeightEdges = config.getOrientLightweightEdges();
+        this.connectUrl = config.getOrientRemoteDbUrl();
+        this.username = config.getOrientUserName();
+        this.password = config.getOrientPassword();
     }
 
     @Override
@@ -408,18 +412,25 @@ public class OrientGraphDatabase extends GraphDatabaseBase<Iterator<Vertex>, Ite
         });
     }
 
-    private OrientGraph getGraph(final File dbPath)
-    {
+    private OrientGraph getGraph(final String dbConnectUrl){
         OrientGraph g;
-        OrientGraphFactory graphFactory = new OrientGraphFactory("plocal:" + dbPath.getAbsolutePath());
+        OrientGraphFactory graphFactory;
+        if (username != null && password != null){
+            graphFactory = new OrientGraphFactory(dbConnectUrl, username, password);
+        } else {
+            graphFactory = new OrientGraphFactory(dbConnectUrl);
+        }
         g = graphFactory.getTx();
         g.setUseLightweightEdges(this.useLightWeightEdges);
         return g;
     }
 
-    private OrientGraph getGraph(final String url){
-        return new OrientGraph(url, "root", "admin");
+    private OrientGraph getGraph(final File dbPath)
+    {
+        return getGraph("plocal:" + dbPath.getAbsolutePath());
     }
+
+
 
     private OrientGraph getGraph(){
         return StringUtils.isNotEmpty(connectUrl) ? getGraph(connectUrl) : getGraph(dbStorageDirectory);

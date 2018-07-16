@@ -89,6 +89,8 @@ public class BenchmarkConfiguration
     private final boolean dynamodbConsistentRead;
     private final Boolean orientLightweightEdges;
     private final String orientRemoteDbUrl;
+    private final String orientUserName;
+    private final String orientPassword;
     private final String sparkseeLicenseKey;
 
     // shortest path
@@ -113,7 +115,7 @@ public class BenchmarkConfiguration
     private final boolean dynamodbPrecreateTables;
     private final String dynamodbTablePrefix;
 
-    public String getDynamodbCredentialsFqClassName()
+  public String getDynamodbCredentialsFqClassName()
     {
         return dynamodbCredentialsFqClassName;
     }
@@ -166,8 +168,10 @@ public class BenchmarkConfiguration
         this.dynamodbTablePrefix = dynamodb.containsKey(TABLE_PREFIX) ? dynamodb.getString(TABLE_PREFIX) : Constants.DYNAMODB_TABLE_PREFIX.getDefaultValue();
 
         Configuration orient = socialsensor.subset("orient");
-        orientLightweightEdges = orient.containsKey(LIGHTWEIGHT_EDGES) ? orient.getBoolean(LIGHTWEIGHT_EDGES) : null;
-        orientRemoteDbUrl = orient.containsKey("connection-url") ? orient.getString("connection-url") : null;
+        orientLightweightEdges = orient.getBoolean(LIGHTWEIGHT_EDGES, null);
+        orientRemoteDbUrl = orient.getString("connection-url", null);
+        orientUserName = orient.getString("username", null);
+        orientPassword = orient.getString("password", null);
 
         Configuration sparksee = socialsensor.subset("sparksee");
         sparkseeLicenseKey = sparksee.containsKey(LICENSE_KEY) ? sparksee.getString(LICENSE_KEY) : null;
@@ -362,13 +366,21 @@ public class BenchmarkConfiguration
         return actualCommunities;
     }
 
-    public Boolean orientLightweightEdges()
+    public Boolean getOrientLightweightEdges()
     {
         return orientLightweightEdges;
     }
 
-    public String orientRemoteDbUrl() {
+    public String getOrientRemoteDbUrl() {
         return orientRemoteDbUrl;
+    }
+
+    public String getOrientUserName(){
+      return orientUserName;
+    }
+
+    public String getOrientPassword(){
+      return orientPassword;
     }
 
     public String getSparkseeLicenseKey()

@@ -50,7 +50,7 @@
     </scm>
 
     <properties>
-        <blueprints.version>2.6.0</blueprints.version>
+        <blueprints.version>3.3.0</blueprints.version>
         <orientdb.version>3.0.3</orientdb.version>
         <titan.version>0.5.4</titan.version>
         <hbase.version>0.98.8-hadoop2</hbase.version>
@@ -119,15 +119,15 @@
             <version>1.1.1</version>
         </dependency>
         <dependency>
-            <groupId>com.tinkerpop.gremlin</groupId>
+            <groupId>org.apache.tinkerpop</groupId>
             <artifactId>gremlin-groovy</artifactId>
             <version>${blueprints.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.tinkerpop.gremlin</groupId>
-            <artifactId>gremlin-java</artifactId>
-            <version>${blueprints.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.tinkerpop.gremlin</groupId>-->
+            <!--<artifactId>gremlin-java</artifactId>-->
+            <!--<version>${blueprints.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.github.stephenc.high-scale-lib</groupId>
             <artifactId>high-scale-lib</artifactId>
@@ -164,8 +164,8 @@
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.tinkerpop.blueprints</groupId>
-            <artifactId>blueprints-neo4j2-graph</artifactId>
+            <groupId>org.apache.tinkerpop</groupId>
+            <artifactId>neo4j-gremlin</artifactId>
             <version>${blueprints.version}</version>
             <exclusions>
                 <exclusion>
@@ -177,12 +177,7 @@
         <dependency>
             <groupId>com.orientechnologies</groupId>
             <artifactId>orientdb-graphdb</artifactId>
-            <version>${orientdb.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.tinkerpop</groupId>
-            <artifactId>pipes</artifactId>
-            <version>${blueprints.version}</version>
+            <version>3.0.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -247,11 +242,11 @@
             <artifactId>sparkseejava</artifactId>
             <version>5.0.0</version>
         </dependency>
-        <dependency>
-           <groupId>com.tinkerpop.blueprints</groupId>
-           <artifactId>blueprints-sparksee-graph</artifactId>
-           <version>${blueprints.version}</version>
-        </dependency>
+        <!--<dependency>-->
+           <!--<groupId>org.apache.tinkerpop</groupId>-->
+           <!--<artifactId>sparksee</artifactId>-->
+           <!--<version>${blueprints.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
